@@ -4,12 +4,17 @@ import os
 import yaml
 sys.path.append("CRU_ITS/software/py/")
 from stave_plotter import FHRateStavePlotter, THScanStavePlotter
+from collections import defaultdict
+from gc import get_objects
+import gc
 
 def plot_thr(data_dirs=None, eos_path='', overwrite_runs=False, max_charge=30, injections=21, skipped_rows=51):
 
+    output_path = '/eos/project/a/alice-its-commissioning/OuterBarrel/verification/2nd_attempt/stability_plots'
+
     bad_run_dict = {'bad_runs': []}
 
-    yaml_filename = 'Plots/thr_summary.yaml'
+    yaml_filename = output_path + '/thr_summary.yaml'
     is_yaml = os.path.exists(yaml_filename)
 
     if(overwrite_runs==False and is_yaml==True):
@@ -23,7 +28,7 @@ def plot_thr(data_dirs=None, eos_path='', overwrite_runs=False, max_charge=30, i
 
     for data_dir in data_dirs:
 
-        out_dir = "Plots/Plots_" + data_dir
+        out_dir = output_path + "/Plots_" + data_dir
         if not os.path.exists(out_dir):
                 os.makedirs(out_dir)
         
@@ -68,23 +73,25 @@ def plot_thr(data_dirs=None, eos_path='', overwrite_runs=False, max_charge=30, i
 
             if plotter.complete_run == False:
                 bad_run_dict['bad_runs'].append(plot_name)
+                update_yaml(yaml_filename, thr_dict, bad_run_dict)
                 continue
 
             res = plotter.plot_chips()
             thr_dict[stave_name]['mean'].append(res[0])
             thr_dict[stave_name]['std'].append(res[1])
-            # plotter.plot_stack()
-            # plotter.plot_stave()
-
-    with open(yaml_filename, 'w') as outfile:
-        yaml.dump(thr_dict, outfile, default_flow_style=False)
-        yaml.dump(bad_run_dict, outfile, default_flow_style=False)
+            plotter.plot_stack()
+            plotter.plot_stave()
+            del plotter
+            gc.collect()
+            update_yaml(yaml_filename, thr_dict, bad_run_dict)
 
 
 def plot_fhr(data_dirs=None, eos_path='', overwrite_runs=False, n_events=3360000):
 
+    output_path = '/eos/project/a/alice-its-commissioning/OuterBarrel/verification/2nd_attempt/stability_plots'
+
     bad_run_dict = {'bad_runs': []}
-    yaml_filename = 'Plots/fhr_summary.yaml'
+    yaml_filename = output_path + '/fhr_summary.yaml'
     is_yaml = os.path.exists(yaml_filename)
 
     if(overwrite_runs==False and is_yaml==True):
@@ -94,12 +101,14 @@ def plot_fhr(data_dirs=None, eos_path='', overwrite_runs=False, n_events=3360000
 
     if data_dirs==None:
         data_dirs = [data for data in os.listdir() if data[0]=="L"]   
+    
 
     for data_dir in data_dirs:
 
+        
         stave_name = data_dir[0:5]
 
-        out_dir = "Plots/Plots_" + data_dir
+        out_dir = output_path + "/Plots_" + data_dir
         if not os.path.exists(out_dir):
                 os.makedirs(out_dir)
         
@@ -152,6 +161,7 @@ def plot_fhr(data_dirs=None, eos_path='', overwrite_runs=False, n_events=3360000
             
             if plotter.complete_run == False:
                 bad_run_dict['bad_runs'].append(plot_name)
+                update_yaml(yaml_filename, fhr_dict, bad_run_dict)
                 continue
             
 
@@ -159,9 +169,19 @@ def plot_fhr(data_dirs=None, eos_path='', overwrite_runs=False, n_events=3360000
             res = plotter.plot_chips()
             fhr_dict[stave_name]['mean'][name].append(res[0])
             fhr_dict[stave_name]['std'][name].append(res[1])
-            # plotter.plot_stave(force_binary=True)
-            # plotter.plot_stack(force_binary=True)
+            plotter.plot_stave(force_binary=True)
+            plotter.plot_stack(force_binary=True)
+            del plotter
+            gc.collect()
+            
+            update_yaml(yaml_filename, fhr_dict, bad_run_dict)
 
+
+
+
+
+def update_yaml(yaml_filename, res_dict, bad_run_dict):
     with open(yaml_filename, 'w') as outfile:
-        yaml.dump(fhr_dict, outfile, default_flow_style=False)
+        yaml.dump(res_dict, outfile, default_flow_style=False)
         yaml.dump(bad_run_dict, outfile, default_flow_style=False)
+        outfile.close()
