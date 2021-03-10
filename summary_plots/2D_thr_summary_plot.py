@@ -9,7 +9,7 @@ import hist
 # Quick construction, no other imports needed:
 
 
-with open("thr_summary.yaml", 'r') as stream:
+with open("../../ciao/thr_summary.yaml", 'r') as stream:
     dic = yaml.load(stream)
 
 

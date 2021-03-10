@@ -9,10 +9,10 @@ import hist
 # Quick construction, no other imports needed:
 
 
-with open("fhr_summary.yaml", 'r') as stream:
+with open("../../ciao/fhr_summary.yaml", 'r') as stream:
     dic_fhr = yaml.load(stream)
 
-with open("thr_summary.yaml", 'r') as stream:
+with open("../../ciao/thr_summary.yaml", 'r') as stream:
     dic_thr = yaml.load(stream)
 
 staves = list(dic_fhr.keys())[:-1]

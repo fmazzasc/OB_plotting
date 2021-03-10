@@ -7,7 +7,7 @@ import matplotlib
 # matplotlib.use('pdf')
 matplotlib.style.use('seaborn')
 
-with open("thr_summary.yaml", 'r') as stream:
+with open("../../ciao/thr_summary.yaml", 'r') as stream:
     dic = yaml.load(stream)
 
 
