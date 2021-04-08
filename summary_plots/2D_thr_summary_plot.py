@@ -5,11 +5,14 @@ import matplotlib.ticker as plticker
 import matplotlib
 from hist import Hist
 import hist
+import mplhep
 
+matplotlib.style.use(mplhep.style.ALICE)
+matplotlib.use("pdf")
 # Quick construction, no other imports needed:
 
 
-with open("../../ciao/thr_summary.yaml", 'r') as stream:
+with open("../../stability_plots2/thr_summary.yaml", 'r') as stream:
     dic = yaml.load(stream)
 
 
@@ -48,22 +51,30 @@ h.fill(stave_array, thr_array)
 
 fig, ax = plt.subplots(figsize=(20, 6))
 w, x, y = h.to_numpy()
-mesh = ax.pcolormesh(x, y, w.T, cmap = 'viridis')
+mesh = ax.pcolormesh(x, y, w.T, cmap = 'viridis', rasterized=True)
 ax.set_xticks(range(len(staves)))
 ax.set_xticklabels(staves)
 ax.set_xticklabels(staves, rotation='vertical', fontsize=13)
 ax.set_ylabel('Average Threshold Scan (electrons)', fontsize=18)
 loc = plticker.MultipleLocator(base=3.0) # this locator puts ticks at regular intervals
 ax.xaxis.set_major_locator(loc)
+ax.set_xticklabels(staves)
+ax.set_xticklabels(staves, rotation='vertical', fontsize=13)
+ax.tick_params(axis='y', which='major', labelsize=16)
 fig.colorbar(mesh)
 
-plt.text( 80, 110, f'Outer Barrel, Average THR : {np.round(mean, 2)}', fontsize = 20, color = 'white')
+plt.text( 70, 110, f'Outer Barrel: Threshold Scan', fontsize = 20, color = 'white')
 
 
 
-plt.plot([0, np.max(stave_array)], [np.mean(thr_array), np.mean(thr_array)], 'w--')
+
+plt.plot([0, np.max(stave_array)], [np.mean(thr_array), np.mean(thr_array)], 'w--', label = f"Average Threshold: {np.round(mean,2)} $\pm$ {np.round(np.std(thr_array)/np.sqrt(len(thr_array)),2)}")
+leg = plt.legend(fontsize=20,loc='upper right', bbox_to_anchor=(0.84, 0.88))
+plt.setp(leg.get_texts(), color='w')
+
 plt.xlim((0, np.max(stave_array)-0.5))
 
 plt.tight_layout()
 plt.savefig(f'2D_thr.png')
+plt.savefig(f'2D_thr.pdf')
 plt.show()
