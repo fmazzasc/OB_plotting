@@ -53,14 +53,14 @@ for test,output in zip(test_type, output_string):
     std = np.std(fhr_array)
     print("Average:", mean, " RMS: ", std)
     # lim_sup = -4 if test=="tuned_fhr" else -10
-    lim_sup=-4
+    lim_sup=-3.5
 
     h = Hist(
         hist.axis.Regular(
             len(staves), 0, len(staves)-1, name="", label="", underflow=False, overflow=False
         ),
         hist.axis.Regular(
-            20, -12, lim_sup, name="Average Fake Hit Rate", label="", underflow=False, overflow=False
+            20, -11.99, lim_sup, name="Average Fake Hit Rate", label="", underflow=False, overflow=False
         ),
     )
 
@@ -82,12 +82,15 @@ for test,output in zip(test_type, output_string):
     mesh = ax.pcolormesh(x, y, w.T, cmap = 'viridis', rasterized=True)
     ax.set_xticks(range(len(staves)))
     ax.set_xticklabels(staves)
-    ax.set_xticklabels(staves, rotation='vertical', fontsize=13)
-    ax.set_ylabel('Average Fake Hit Rate (log)', fontsize=18)
+    ax.set_xticklabels(staves, rotation='vertical', fontsize=15)
+    ax.set_ylabel('Average Fake Hit Rate (log)', fontsize=26)
     loc = plticker.MultipleLocator(base=3.0) # this locator puts ticks at regular intervals
     ax.xaxis.set_major_locator(loc)
-    ax.tick_params(axis='y', which='major', labelsize=16)
-    fig.colorbar(mesh)
+    ax.tick_params(axis='y', which='major', labelsize=18)
+    bar = fig.colorbar(mesh)
+    bar.set_label("Counts", fontsize=26, rotation=270, labelpad=45, y=0.5)
+    bar.ax.tick_params(labelsize=18)
+    
     # text_sup = -5 if test=="tuned_fhr" else -10.2
     # text_inf = text_sup - 0.7 if test=="tuned_fhr" else text_sup - 0.2
     text_sup = -5
@@ -117,24 +120,7 @@ for test,output in zip(test_type, output_string):
     plt.xlim((0, np.max(stave_array)-0.5))
     # plt.ylim((-12, -4))
     plt.tight_layout()
-    plt.savefig(f'2D_{test}.png')
-    plt.savefig(f'2D_{test}.pdf', bbox_inches='tight')
+    plt.savefig(f'2D_{test}.png', bbox_inches = 'tight',
+    pad_inches = 0.2)
+    plt.savefig(f'2D_{test}.pdf', bbox_inches='tight', pad_inches = 0.2)
 
-
-
-    # plt.figure()
-    # fig, ax = plt.subplots(figsize=(12, 12))
-    # if test != "tuned_fhr":
-    #     ax.xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    # mplhep.histplot(h_distr, ax=ax, yerr=False,histtype="fill", alpha=0.5, color="red")
-    # mplhep.histplot(h_distr, ax=ax, yerr=False, histtype="step", alpha=1, linestyle = "--", color="red", linewidth=3)
-    # text_x = -8.5 if test=="tuned_fhr" else -10.885
-    # text_y = 20 if test=="tuned_fhr" else 30
-    # ax.text(text_x, text_y, f'Outer Barrel: {output}', color="red", fontsize=20, fontweight="bold")
-    # ax.text(text_x, text_y - 1, f'Average FHR : {np.round(mean, 12)}', color="red", fontsize=20, fontweight="bold")
-    # plt.xlabel("Average FHR (log)")
-    # plt.ylabel("Counts")
-    # plt.tight_layout()
-    # plt.savefig(f'distr_{test}.png')
-    # plt.savefig(f'distr_{test}.pdf')
-    # plt.close()
