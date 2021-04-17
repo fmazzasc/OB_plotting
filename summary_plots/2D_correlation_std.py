@@ -7,10 +7,10 @@ from hist import Hist
 import hist
 
 
-with open("../../ciao/fhr_summary.yaml", 'r') as stream:
+with open("../summary_data/fhr_summary.yaml", 'r') as stream:
     dic_fhr = yaml.load(stream)
 
-with open("../../ciao/thr_summary.yaml", 'r') as stream:
+with open("../summary_data/ciao/thr_summary.yaml", 'r') as stream:
     dic_thr = yaml.load(stream)
 
 staves = list(dic_fhr.keys())[:-1]
@@ -63,5 +63,5 @@ for test,output in zip(test_type, output_string):
 
 
     plt.tight_layout()
-    plt.savefig(f'2D_corr_RMS_{test}.png')
+    plt.savefig(f'../results/2D_corr_RMS_{test}.png')
 plt.show()

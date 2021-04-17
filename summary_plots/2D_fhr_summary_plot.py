@@ -12,10 +12,10 @@ matplotlib.use("pdf")
 from matplotlib.ticker import FormatStrFormatter
 
 
-with open("../../fhr_summary.yaml", 'r') as stream:
+with open("../summary_data/fhr_summary.yaml", 'r') as stream:
     dic = yaml.load(stream)
 
-with open("../../fhr_masked_summary.yaml", 'r') as stream:
+with open("../summary_data/fhr_masked_summary.yaml", 'r') as stream:
     dic_masked = yaml.load(stream)
 
 
@@ -120,7 +120,7 @@ for test,output in zip(test_type, output_string):
     plt.xlim((0, np.max(stave_array)-0.5))
     # plt.ylim((-12, -4))
     plt.tight_layout()
-    plt.savefig(f'2D_{test}.png', bbox_inches = 'tight',
+    plt.savefig(f'../results/2D_{test}.png', bbox_inches = 'tight',
     pad_inches = 0.2)
-    plt.savefig(f'2D_{test}.pdf', bbox_inches='tight', pad_inches = 0.2)
+    plt.savefig(f'../results/2D_{test}.pdf', bbox_inches='tight', pad_inches = 0.2)
 

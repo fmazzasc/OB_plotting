@@ -7,7 +7,7 @@ import matplotlib
 # matplotlib.use('pdf')
 matplotlib.style.use('seaborn')
 
-with open("../../ciao/thr_summary.yaml", 'r') as stream:
+with open("../summary_data/thr_summary.yaml", 'r') as stream:
     dic = yaml.load(stream)
 
 
@@ -44,7 +44,7 @@ plt.xlim((-1,len(staves)+1))
 plt.ylabel('Average Threshold (electrons)', fontsize = 20   )
 plt.text( 10, 70, 'Outer Barrel', fontsize = 25, color = 'b')
 plt.tight_layout()
-plt.savefig('thr_aver.png')
+plt.savefig('../results/thr_aver.png')
 # plt.show()
 
 
@@ -62,5 +62,5 @@ ax.xaxis.set_major_locator(loc)
 plt.ylabel('Threshold RMS (electrons)', fontsize = 20)
 plt.text( 4, 35, 'Outer Barrel', fontsize = 25, color = 'b')
 plt.tight_layout()
-plt.savefig('thr_std.png')
+plt.savefig('../results/thr_std.png')
 plt.show()

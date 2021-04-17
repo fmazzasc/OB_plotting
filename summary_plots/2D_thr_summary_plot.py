@@ -12,7 +12,7 @@ matplotlib.use("pdf")
 # Quick construction, no other imports needed:
 
 
-with open("../../stability_plots2/thr_summary.yaml", 'r') as stream:
+with open("../summary_data/thr_summary.yaml", 'r') as stream:
     dic = yaml.load(stream)
 
 
@@ -75,6 +75,6 @@ plt.setp(leg.get_texts(), color='w')
 plt.xlim((0, np.max(stave_array)-0.5))
 
 plt.tight_layout()
-plt.savefig(f'2D_thr.png')
-plt.savefig(f'2D_thr.pdf')
+plt.savefig(f'../results/2D_thr.png')
+plt.savefig(f'../results/2D_thr.pdf')
 plt.show()
